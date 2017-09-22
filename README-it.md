@@ -1,5 +1,5 @@
 *[English](README.md) ∙ [简体中文](README-zh-Hans.md) | [Brazilian Portuguese](https://github.com/donnemartin/system-design-primer/issues/40) ∙ [Japanese](https://github.com/donnemartin/system-design-primer/issues/100) ∙ [Polish](https://github.com/donnemartin/system-design-primer/issues/68) ∙ [Russian](https://github.com/donnemartin/system-design-primer/issues/87) ∙ [Traditional Chinese](https://github.com/donnemartin/system-design-primer/issues/88) ∙ [Turkish](https://github.com/donnemartin/system-design-primer/issues/39) | [Add Translation](https://github.com/donnemartin/system-design-primer/issues/28)*
-
+**Nota: questa traduzione è ancora un progetto in corso**
 # La base del design di sistemi
 
 <p align="center">
@@ -211,3 +211,145 @@ Inizia studiando tutti gli argomenti in generale eapprofondisci su alcune aree. 
 | Rivedi passo a passo delle [domande di progettazione di sistemi con soluzione](#system-design-interview-questions-with-solutions) | Alcune | Molte | La maggior parte |
 | Rivedi passo a passo delle [domande di progettazione ad oggetti con soluzione](#object-oriented-design-interview-questions-with-solutions) | Alcune | Molte | La maggior parte |
 | Rivedi [ulteriori domande relative alla progettazione di sistemi](#additional-system-design-interview-questions) | Alcune | Molte | La maggior parte |
+
+## Come approcciare una domanda di progettazione di sistemi
+
+> Come affrontare una domanda di progettazione di sistemi
+
+Il colloquio dio progettazione di sistemi è una **discussione aperta**. Ci si aspetta che sia tu a condurla.
+
+Puoi usare i seguenti passaggi per raggiungere questo risultato. Per aiutarti a solidificare questo processo, rivedi passo a passo alcune delle [domande di progettazione di sistemi con soluzione](#system-design-interview-questions-with-solutions) utilizzando i seguenti passaggi.
+
+### Passaggio 1: delinea gli scenari di utilizzo, i vincoli e i tuoi presupposti
+
+Raccogli tutti irequisiti e la portata del problema. Fai domande per chiarire tutti gli scenari di utilizzo e i vincoli. Discuti i tuoi presupposti.
+
+* Chi utilizzerà il sistema?
+* Come lo utilizzeranno?
+* Quanti utenti ci si può aspettare?
+* Che cosa fa il sistema?
+* Quali sono gli input e gli output del sistema?
+* Quanti dati dovremmo aspettarci di gestire?
+* Quante richieste al secondo ci aspettiamo?
+* Qual è il rapporto lettura/scritture previsto?
+
+### Passaggio 2: crea un progretto di alto livello.
+
+Delina un progetto di alto livello indicando tutti i componenti principali.
+
+* Abbozza i principali componenti e le loro connessioni
+* Giustifica le tue idee
+
+### Passaggio 3: progetta i componenti principali
+
+Concentrati sui dettagli di ognuno dei componenti principali. Per esempio, se ti è stato richiesto di [progettare un servizion di abbreciazione di url](solutions/system_design/pastebin/README.md), parla di:
+
+* Generazione e memorizzazione di un hash dell'url completo
+	* [MD5](solutions/system_design/pastebin/README.md) e [Base62](solutions/system_design/pastebin/README.md)
+	* Collisioni di Hash
+	* SQL o NoSQL
+	* Schema del database
+* Traduzione dell'url accorciato nell'url completo
+	* Ricerca nel database
+* API e design orientato a oggetti
+
+### Passaggio 4: scala il design
+
+Identifica e risolvi eventuali colli di bottiglia, dati i vincoli del progetto. Per esempio, hai bisogno di risolvere problemi di scalabilità?
+
+* Distributore di carico
+* Scalabilità orizzontale
+* Caching
+* Frammentazione del database
+
+Discuti possibili soluzioni e trade-off. Ogni soluzione è un trade-off. Risolvi i bottleneck fornendoti dei [principi di progettazione di sistemi scalabili](#index-of-system-design-topics).
+
+### Calcoli mentali
+
+Potrebbe esserti richiesto di effettuare delle stime a mano. Rivedi l'[Appendice](#appendix) concentrandoti sui seguenti argomenti: 
+
+* [Effettua calcoli mentali](http://highscalability.com/blog/2011/1/26/google-pro-tip-use-back-of-the-envelope-calculations-to-choo.html)
+* [Tavola delle potenze di due](#powers-of-two-table)
+* [Numeri di latenza che ogni programmatore dovrebbe conoscere](#latency-numbers-every-programmer-should-know)
+
+### Risorse e ulteriori argomenti di lettura
+
+Rivedi i seguenti link per farti un'idea di che cosa aspettarti (in inglese):
+
+* [How to ace a systems design interview](https://www.palantir.com/2011/10/how-to-rock-a-systems-design-interview/)
+* [The system design interview](http://www.hiredintech.com/system-design)
+* [Intro to Architecture and Systems Design Interviews](https://www.youtube.com/watch?v=ZgdS0EUmn70
+
+## Domande di colloquio sulla progettazione di sistemi con soluzione
+
+> Domande di progettazione di sistemi comuni per un colloquio con un esempio di discussione, codice e diagrammi.
+> 
+> Le soluzioni rimandano al contenuto nella cartella `solutions/`.
+
+| Question | |
+| --- | --- |
+| Progetta Pastebin.com (o Bit.ly) | [Soluzione](solutions/system_design/pastebin/README.md) |
+| Progetta la timeline di Twitter (o il feed di Facebook )<br/>Progetta la ricerca di Twitter (o di Facebook) | [Soluzione](solutions/system_design/twitter/README.md) |
+| Progetta a web crawler | [Soluzione](solutions/system_design/web_crawler/README.md) |
+| Progetta Mint.com | [Soluzione](solutions/system_design/mint/README.md) |
+| Progetta le strutture di dati per un social network | [Soluzione](solutions/system_design/social_graph/README.md) |
+| Progetta un sistema di memorizzazione chiave-valore per un motore di ricerca | [Soluzione](solutions/system_design/query_cache/README.md) |
+| Progetta la funzionalità di amazon per le classifiche di vendita di prodotti per categoria | [Soluzione](solutions/system_design/sales_rank/README.md) |
+| Progetta un sistema che scali a milioni di utenti usando AWS | [Soluzione](solutions/system_design/scaling_aws/README.md) |
+| Aggiungi una domanda | [Contribuisci](#contributing) |
+
+### Progetta Pastebin.com (o Bit.ly)
+
+[Vedi l'esercizio e la soluzione](solutions/system_design/pastebin/README.md)
+
+![Imgur](http://i.imgur.com/4edXG0T.png)
+
+### Progetta la timeline e la ricerca di Twitter (o di Facebook)
+
+[Vedi l'esercizio e la soluzione](solutions/system_design/twitter/README.md)
+
+![Imgur](http://i.imgur.com/jrUBAF7.png)
+
+### Progetta un web crawler
+
+[Vedi l'esercizio e la soluzione](solutions/system_design/web_crawler/README.md)
+
+![Imgur](http://i.imgur.com/bWxPtQA.png)
+
+### Progetta Mint.com
+
+[Vedi l'esercizio e la soluzione](solutions/system_design/mint/README.md)
+
+![Imgur](http://i.imgur.com/V5q57vU.png)
+
+### Progetta le strutture di dati per un social network
+
+[Vedi l'esercizio e la soluzione](solutions/system_design/social_graph/README.md)
+
+![Imgur](http://i.imgur.com/cdCv5g7.png)
+
+### Progetta un sistema di memorizzazione chiave-valore per un motore di ricerca
+
+[Vedi l'esercizio e la soluzione](solutions/system_design/query_cache/README.md)
+
+![Imgur](http://i.imgur.com/4j99mhe.png)
+
+### Progetta la funzionalità di amazon per le classifiche di vendita di prodotti per categoria
+
+[Vedi l'esercizio e la soluzione](solutions/system_design/sales_rank/README.md)
+
+![Imgur](http://i.imgur.com/MzExP06.png)
+
+### Progetta un sistema che scali a milioni di utenti usando AWS
+
+[Vedi l'esercizio e la soluzione](solutions/system_design/scaling_aws/README.md)
+
+![Imgur](http://i.imgur.com/jj3A5N8.png)
+
+## Domande di progettazione orientata a oggetti con soluzioni
+
+> Comuni domande di progettazione orientata a oggetti con esempi di discussione, codici e diagrammi.
+> 
+> Le soluzioni rimandano al contenuto nella cartella `solutions/`.
+
+>**Nota: questa sezione è ancora in sviluppo**
