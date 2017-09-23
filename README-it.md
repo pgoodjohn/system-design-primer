@@ -95,14 +95,14 @@ Riferisciti alle [Guide di Contribuzione](CONTRIBUTING.md).
   <br/>
 </p>
 
-* [Argomenti di progettazione di sistemi: inizia qui](#system-design-topics-start-here).
-	* [Passo 1: rivisita la video lezione sulla scalabilità](#step-1-review-the-scalability-video-lecture)
-	* [Passo 2: rivisita l'articolo sulla scalabilità](#step-2-review-the-scalability-article)
-	* [Passi successivi](#next-steps)
-* [Prestazioni vs scalabilità](#performance-vs-scalability)
-* [Latenza vs throughput](#latency-vs-throughput)
-* [Disponibilità vs coerenza](#availability-vs-consistency)
-	* [Il teorema di CAP](#cap-theorem)
+* [Argomenti di progettazione di sistemi: inizia qui](#argomenti-di-progettazione-di-sistemi-inizia-qui).
+	* [Passo 1: rivisita la video lezione sulla scalabilità](#passo-1-rivisita-la-video-lezione-sulla-scalabilità)
+	* [Passo 2: rivisita l'articolo sulla scalabilità](#passo-2-rivisita-l-articolo-sulla-scalabilità)
+	* [Passi successivi](#passi-successivi)
+* [Prestazioni vs scalabilità](#prestazioni-vs-scalabilità)
+* [Latenza vs throughput](#latenza-vs-throughput)
+* [Disponibilità vs coerenza](#disponibilità-vs-coerenza)
+	* [Il teorema di CAP](#il-teorema-di-CAP)
 		* [CP - consistenza e tolleranza di partizione](#cp---consistency-and-partition-tolerance)
 		* [DP - disponibilità e tolleranza di partizione](#ap---availability-and-partition-tolerance)
 * [Modelli di coerenza](#consistency-patterns)
@@ -353,3 +353,223 @@ Rivedi i seguenti link per farti un'idea di che cosa aspettarti (in inglese):
 > Le soluzioni rimandano al contenuto nella cartella `solutions/`.
 
 >**Nota: questa sezione è ancora in sviluppo**
+
+| Domande | |
+|---|---|
+| Progetta una mappa ad hash | [Soluzione](solutions/object_oriented_design/hash_table/hash_map.ipynb)  |
+| Progetta una cache per un sistema di 'Utilizzati di Recente' | [Soluzione](solutions/object_oriented_design/lru_cache/lru_cache.ipynb)  |
+| Progetta un call center | [Soluzione](solutions/object_oriented_design/call_center/call_center.ipynb)  |
+| Progetta un mazzo di carte | [Soluzione](solutions/object_oriented_design/deck_of_cards/deck_of_cards.ipynb)  |
+| Progetta un parcheggio | [Soluzione](solutions/object_oriented_design/parking_lot/parking_lot.ipynb)  |
+| Progetta un server per un servizio di chat | [Soluzione](solutions/object_oriented_design/online_chat/online_chat.ipynb)  |
+| Progetta una array circolare | [Contribuisci](#contribuisci)  |
+| Aggiungi una domanda di progettazione orientata ad oggetti | [Contribuisci](#contribuisci) |
+
+### Argomenti di progettazione di sistemi: inizia qui
+
+Novizio alla progettazione di sistemi?
+
+Per incominciare, avrai bisogno di un'infarinatura dei principi base, imparare quali sono, come sono utilizzati e i loro pro e contro.
+
+### Passo 1: rivisita la video lezione sulla scalabilità
+
+[Lezione sulla scalabilità ad Harvard](https://www.youtube.com/watch?v=-W9F__D3oY4)
+
+* Argomenti trattati:
+	* Scalatura verticale
+	* Scalatura orizzontale
+	* Caching
+	* Bilanciamento di carico
+	* Replicazione di database
+	* Partizionamento di database
+
+### Passo 2: rivisita l'articolo sulla scalabilità
+
+[Scalabilità](http://www.lecloud.net/tagged/scalability)
+
+* Argomenti trattati:
+    * [Cloni](http://www.lecloud.net/post/7295452622/scalability-for-dummies-part-1-clones)
+    * [Database](http://www.lecloud.net/post/7994751381/scalability-for-dummies-part-2-database)
+    * [Cache](http://www.lecloud.net/post/9246290032/scalability-for-dummies-part-3-cache)
+    * [Asincronia](http://www.lecloud.net/post/9699762917/scalability-for-dummies-part-4-asynchronism)
+
+### Passi successivi
+
+Successivamente, trattiamo alcuni dei trade-off di alto livello:
+
+* **Prestazioni** vs **scalabilità**
+* **Latenza** vs **throughput**
+* **Disponibilità** vs **coerenza**
+
+Ricordati che nella progettazione di sistemi, ogni scelta è un trade-off.
+
+Andremo poi a trattare argomenti più specifici come DNS, CDN e bilanciatori di carico.
+
+## Prestazioni vs scalabilità
+
+Un servizio è **scalabile** se risulta avere un incremento di **prestazioni** proporzionale alla quantità di risorse aggiunte. Generalmente, aumentare le prestazioni significa servire più unità di lavoro, ma potrebbe anche indicare l'abilità di gestire unità di lavoro di maggiori dimensioni come, per esempio, un dataset di dimensioni aumentate.<sup><a href=http://www.allthingsdistributed.com/2006/03/a_word_on_scalability.html>1</a></sup>
+
+Un altro modo per riflettere al problema di prestazioni vs scalabilità è il seguente:
+
+* Se hai problemi di **prestazioni**, il tuo sistema risulta lento per un singolo utente.
+* Se hai problemi di **scalabilità**, il tuo sistema risulta veloce per un singolo utente ma rallenta sotto un grosso carico di lavoro.
+
+### Risorse e ulteriori spunti di lettura
+
+* [A word on scalability](http://www.allthingsdistributed.com/2006/03/a_word_on_scalability.html)
+* [Scalability, availability, stability, patterns](http://www.slideshare.net/jboner/scalability-availability-stability-patterns/)
+
+## Latenza vs throughput
+
+La **latenza** è il tempo per eseguire un certo comando o per produrre uno specifico risultato.
+
+Il **throughput** è la quantità del sopracitato tipo di azioni che possono essere eseguite in un unità di tempo.
+
+In genere, l'obiettivo è avere **massimo throughput** con **latenza accettabile**.
+
+### Risorse e ulteriori spunti  di lettura
+
+* [Understanding latency vs throughput](https://community.cadence.com/cadence_blogs_8/b/sd/archive/2010/09/13/understanding-latency-vs-throughput)
+
+## Disponibilità vs consistenza
+
+### Il teorema di CAP
+
+<p align="center">
+  <img src="http://i.imgur.com/bgLMI2u.png">
+  <br/>
+  <i><a href=http://robertgreiner.com/2014/08/cap-theorem-revisited>Fonte: il teorema di CAP, revisitato</a></i>
+</p>
+
+In un sistema di calcolo distribuito, è possibile garantire solo due delle seguenti:
+
+* **Consistenza** - Ogni lettura riceve la scrittura o l'errore più recente
+* **Disponibilità** - Ogni richiesta riceve una risposta, senza la garanzia che questa contenga la versione dell'informazione più recente
+* **Tolleranza di partizione** - Il sistema continua ad operare anche in caso di partizione arbitraria causata da fallimenti della rete
+
+*Le reti non sono RELIABLE, dovrai quindi supportare la tolleranza di partizione. Sarà necessario che tu faccia dei trade off a livello di software fra coerenza e disponibilità*
+
+#### CP - Coerenza e tolleranza di partizione
+
+Attendere una risposta da un nodo partizionato potrebbe risultare in un errore di timeout. CP è una buona scelta se è richiesto che il sistema abbia lettura e scrittura atomica.
+
+#### AP - Disponibilità e tolleranza di partizione
+
+In questa situazione, le risposte che riferiscono la versione più recente dei dati presenti sul nodo che, però, potrebbe non essere la versione più recente presente sul sistema. Questa potrebbe richiedere del tempo prima che si possa propagare in tutti i nodi del sistema stesso.
+
+La AP è una buona scelta se è richiesto che il sistema abbia [coerenza eventuale](#coerenza-eventuale) o quando è necessario che il sistema continui a lavorare nonostante errori esterni.
+
+### Risorse e ulteriori spunti di lettura
+
+* [CAP theorem revisited](http://robertgreiner.com/2014/08/cap-theorem-revisited/)
+* [A plain english introduction to CAP theorem](http://ksat.me/a-plain-english-introduction-to-cap-theorem/)
+* [CAP FAQ](https://github.com/henryr/cap-faq)
+
+## Pattern di coerenza
+
+Con diverse copie delle stesse informazioni, abbiamo diverse opzioni per sincornizzarle in modo tale che tutti i client abbiano una vista coerente dei dati. Rivedi la definizione del [teorema di CAP](#il-teorema-di-cap) - ogni lettura riceve la scrittura più recente o un errore.
+
+### Coerenza debole
+
+Dopo una operazione di scrittura, le operazioni di lettura potrebbero vederlo o non vederlo. Si tratta di un approccio _best effort_.
+
+Questo approccio è usato in sistemi timpo memcached. La coerenza debole funziona bene in sistemi real-time come applicazioni VoIP, video chat e giochi multiplayer in tempo reale. Per esempio, se durante una telefonata la connessione viene persa per qualche secondo, al momento della riconnessione non verranno riprodotti i secondi di chiamata persi.
+
+### Coerenza eventuale
+
+Dopo un'operazione di scrittura, le operazioni di lettura, eventualmente (solitamente dopo qualche millisecondo) vedranno le informazioni aggiornate. I dati sono replicati in modo asincrono.
+
+Questo approccio è tipicamente usato in sistemi come DNS e email. La coerenza eventuale funziona bene in sistemi ad alta disponibilità.
+
+### Coerenza forte
+
+Dopo una operazione di scrittura, le operazioni di lettura vedranno, immediatamente, i dati aggiornati.
+
+Questo approccio è tipico in file-system e RDBMS. La coerenza forte funziona bene in sistemi che hanno bisogno della probabilità di transitività.
+
+### Risorse e ulteriori spunti di lettura
+
+* [Transactions across data centers](http://snarfed.org/transactions_across_datacenters_io.html)
+
+## Pattern di disponibilità
+
+Esistono due principali pattern che garantiscono alta disponibilità: il **fail-over** e la **replicazione**.
+
+### Fail-over
+
+#### Attivo-passivo
+
+Con il fail-over attivo-passivo, dei _battiti_ sono inviati fra il server attivo e il server passivo in standby. Se questo battito viene interrotto, il sistema passivo prende il posto di quello attivo, assegnandosi il suo indirizzo IP, e continaundo il servizio.
+
+La durata del downtime è determinata dal metodo in cui il server passivo è attivo: se si trova in 'hot' standby o in 'cold' standby. Tutto il traffico è gestito solamente dal server attivo.
+
+Il fail-over attivo-passivo può anche essere chiamato fail-over master-slave.
+
+#### Attivo-attivo
+
+Nel fail-over attivo-attivo, entrambi i server gestiscono il traffico, dividendosi il carico fra di loro.
+
+Se i server sono rivolti al pubblico, il DNS dovrebbe conoscere gli indirizzi IP pubblici di entrambi i server.
+Se i server sono rivolti all'interno, la logica dell'applicazione dovrebbe avere informazioni riguardo a entrambi i server.
+
+Il fail-over attivo-attivo può anche essere chiamato fail-over master-master.
+
+### Svantaggi: fail-over
+
+* Sistemi di fail-over aggiungono hardware alle richieste e creano maggiore complessità.
+* C'è una potenziale perdita di dati se il sistema attivo fallisce prima che ogni data scritta sul sistema attivo può essere propagata sul passivo.
+
+### Replica
+
+#### Master-slave e master-master
+
+Questo argomento è discusso nella sezione [Database](#database):
+
+* [Replica master-slave](#replica-master-slave)
+* [Replica master-master](#replica-master-master)
+
+## Domain name system (DNS)
+
+<p align="center">
+  <img src="http://i.imgur.com/IOyLj4i.jpg">
+  <br/>
+  <i><a href=http://www.slideshare.net/srikrupa5/dns-security-presentation-issa>Source: DNS security presentation</a></i>
+</p>
+
+Un Domain Name System (DNS) traduce nomi di dominio come www.example.com in indirizzi IP.
+
+I DNS sono gerarchici: con pochi server autoritativi al livello superiore. Il tuo router o il tuo ISP forniscono informazioni riguardanti i server DNS da contattare quando una operazione di lookup è in corso. Server DNS di livello più basso salvano le mappature nelle loro cache, che potrebbero diventare stale a causa dei ritardi di propagazione di DNS. I risultati DNS possono anche essere salavati nella cache dal tuo browser o dal sistema operativo per un certo periodo di tempo, solitamente determinato dal [tempo di vita (TTL)](https://en.wikipedia.org/wiki/Time_to_live).
+
+* **NS Record (name server)** - Specifica i(l) server DNS per il tuo dominio/sottodominio.
+* **MX Record (mail exchange)** - Specifica i(l) server mail per accettare messaggi.
+* **A Record (address)** - Mappa un nome ad un indirizzo IP.
+* **CNAME (canonical)** - Mappa un nome ad un altro nome o ad un altro `CNAME` (example.com a www.example.com) o a un `A` record.
+
+Servizi come [CloudFlare](https://www.cloudflare.com/dns/) e Route 53](https://aws.amazon.com/route53/) forniscono servizi autogestiti di DNS. Alcuni servizi di DNS possono indirizzare il traffico utilizzando diversi metodi:
+
+* [Round Robin ponderato](http://g33kinfo.com/info/archives/2657)
+	* Evita che del traffico sia indirizzato a server in manutenzione
+    * Garantisce un bilanciamento fra diverse dimensioni di cluster
+    * Permette di effettuare A/B testing
+* Basato sulla latenza
+* Basato sulla geolocalizzazione
+
+### Svanttaggi: DNS
+
+* Accedere ad un server DNS introduce un piccolo ritardo che, però, è solitamente mitigato dalle operazioni di caching descritte sopra.
+* Gestire un server DNS potrebbe risultare complicato, sebbene questi siano gestiti da [governi, ISP, e grandi compagnie](http://superuser.com/questions/472695/who-controls-the-dns-servers/472729).
+* Servizi di DNS sono stati recentemente obiettivi di [attacchi DDoS](http://dyn.com/blog/dyn-analysis-summary-of-friday-october-21-attack/), i quali hanno impedito agli utenti di accedere a servizi come Twitter senza sapere gli indirizzi IP di Twitter.
+
+### Risorse e ulteriori sputni di lettura
+
+* [DNS architecture](https://technet.microsoft.com/en-us/library/dd197427(v=ws.10).aspx)
+* [Wikipedia](https://en.wikipedia.org/wiki/Domain_Name_System)
+* [DNS articles](https://support.dnsimple.com/categories/dns/)
+
+## Content Delivery Network
+
+<p align="center">
+  <img src="http://i.imgur.com/h9TAuGI.jpg">
+  <br/>
+  <i><a href=https://www.creative-artworks.eu/why-use-a-content-delivery-network-cdn/>Fonte: perché usare una CDN</a></i>
+</p>
