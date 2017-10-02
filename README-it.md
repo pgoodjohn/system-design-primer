@@ -560,7 +560,7 @@ Servizi come [CloudFlare](https://www.cloudflare.com/dns/) e Route 53](https://a
 * Gestire un server DNS potrebbe risultare complicato, sebbene questi siano gestiti da [governi, ISP, e grandi compagnie](http://superuser.com/questions/472695/who-controls-the-dns-servers/472729).
 * Servizi di DNS sono stati recentemente obiettivi di [attacchi DDoS](http://dyn.com/blog/dyn-analysis-summary-of-friday-october-21-attack/), i quali hanno impedito agli utenti di accedere a servizi come Twitter senza sapere gli indirizzi IP di Twitter.
 
-### Risorse e ulteriori sputni di lettura
+### Risorse e ulteriori spunti di lettura
 
 * [DNS architecture](https://technet.microsoft.com/en-us/library/dd197427(v=ws.10).aspx)
 * [Wikipedia](https://en.wikipedia.org/wiki/Domain_Name_System)
@@ -573,3 +573,36 @@ Servizi come [CloudFlare](https://www.cloudflare.com/dns/) e Route 53](https://a
   <br/>
   <i><a href=https://www.creative-artworks.eu/why-use-a-content-delivery-network-cdn/>Fonte: perché usare una CDN</a></i>
 </p>
+
+Una Content Delivery Network (o CDN) è una rete di server proxy distribuita globalmente, il cui scopo è quello di servire contenuti da luoghi più vicini all'utente. In genere, le CDN sono utilizzate per servire file statici come file HTML/CSS/JS, immagini e video; alcune CDN come CloudFront di Amazon, però, supportano anche contenuti dinamici. La risoluzione DNS del sito collegato alla CDN fornirà i dettagli di quale server contattare al browser cliente.
+
+Servire contenuti da una CDN può aumentare notevolmente l'efficenza in due modi:
+
+* Gli utenti ricevono i contenuti da dei data center vicino a loro
+* Il server non deve servire tutte le richieste che sono delegate alla CDN
+
+### CDN Push
+
+Le cosiddette CDN Push ricevono nuovi contenuti ogniqualvolta un cambiamento accade sul server. Ti viene data la completa responsabilità di fornire il contenuto, caricandolo direttamente sulla CDN e riscrivendo gli URL in modo tale che questi puntino alla CDN stessa. Puoi configurare quando il contenuto scade e quando viene aggiornato. I contenuti sono caricati solamente quando è nuovo o modificato, riducendo così il traffico ma sfruttando al massimo la memorizzazione.
+
+### CDN Pull
+
+Le CDN Pull richiedono il contenuto al server la prima volta che un utente ne effettua la richiesta. Tutti i contenuti rimangono sul server e è solo necessario che tu riscriva gli URL in modo tale che questi puntino alla CDN. Il risultato di questa operazione è richieste più lente fino a quando il contenuto non è salvato nella cache della CDN.
+
+Il [time-to-live (TTL)](https://it.wikipedia.org/wiki/Time_to_live) determina quanto a lungo i contenuti sono salvati sulla CDN. Le CDN pull minimizzano la quantità di memoria usata, ma possono creare traffico ridondante se dei file scadono e vengono ri-richiesti prima che siano effettivamente cambiati.
+
+I siti con traffico molto pesante sono quelli che traggono più vantaggio dalle CDN Pull in quanto questo è diviso più equamente con solamente i contenuti più recenti memorizzati sulla CDN.
+
+
+### Svantaggi: CDN
+
+* Il costo delle CDN potrebbe essere significativo, in base al traffico, anche se questo va pesato con i costi in cui incorreresti nel caso tu non usassi una CDN.
+* I contenuti potrebbero essere obsoleti nel caso questi vengano aggiornati prima che il TTL li faccia sadere
+* Le CDN richiedono che tutti gli URL vengano cambiati in modo tale da puntare alla CDN stessa.
+
+### Risorse e ulteriori spunti di lettura
+
+* [Globally distributed content delivery](http://repository.cmu.edu/cgi/viewcontent.cgi?article=2112&context=compsci)
+* [The differences between push and pull CDNs](http://www.travelblogadvice.com/technical/the-differences-between-push-and-pull-cdns/)
+* [Wikipedia](https://it.wikipedia.org/wiki/Content_Delivery_Network)
+
