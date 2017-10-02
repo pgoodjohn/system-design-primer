@@ -606,3 +606,72 @@ I siti con traffico molto pesante sono quelli che traggono più vantaggio dalle 
 * [The differences between push and pull CDNs](http://www.travelblogadvice.com/technical/the-differences-between-push-and-pull-cdns/)
 * [Wikipedia](https://it.wikipedia.org/wiki/Content_Delivery_Network)
 
+## Bilanciatori di Carico
+
+<p align="center">
+  <img src="http://i.imgur.com/h81n9iK.png">
+  <br/>
+  <i><a href=http://horicky.blogspot.com/2010/10/scalable-system-design-patterns.html>Fonte: Pattern di progettazione di software scalabile</a></i>
+</p>
+
+I Bilanciatori di carico distribuiscono le richieste dei clienti in arrivo a risorse di calcolo come server e database. In ogni caso, il bilanciatore di carico riporta la risposta dalla risorsa al cliente appropriato. I bilanciatori di carico sono molto effficenti a:
+
+* Evitare che le richieste finiscano a server malsani
+* Evitare un sovraccarico di risorse
+* Aiutare ad eliminare i singoli punti di vulnerabilità
+
+I bilanciatori di carico possono essere implementati sia tramite hardware (che risulta, però, essere meno economico) o tramite software come HAProxy.
+
+Ulteriori benefici includono:
+
+* **Terminazioni SSL** - Decifrare richieste in arrivo e cifrare risponse dei server in modo tale che i server back-end non debbano eseguire queste potenzialmente complicate operazioni
+	* Rimuovono la necessità di installare i [certificati X.509](https://it.wikipedia.org/wiki/X.509) su ogni server
+* **Persistenza di sessione** - Distribuiscono cookies e indirizzano le richieste di uno specifico client alla stessa istanza del server se le applicazioni web non mantengono traccia delle sessioni
+
+PEr proteggere da fallimenti, è comune impostare diversi bilanciatori di carico, o in modalità [attiva-passiva](#attiva-passiva) o [attiva-attiva](#attiva-attiva)
+
+I bilanciatori di carico possono instradare il traffico in base a diverse metriche, includendo:
+
+* Casuale
+* Meno carico
+* Sessione/cookies
+* [Round Robin o Round Robin ponderato](http://g33kinfo.com/info/archives/2657)
+* [Livello 4](#bilanciamento-di-carico-al-livello-4)
+* [Livello 7](#bilanciamento-di-carico-al-livello-7)
+
+### Bilanciamento di carico al Livello 4
+
+I bilanciatori di carico di Livello 4 controllano le informazioni al [livello di trasporto](#comunicazione) per decidere come distribuire le richieste. In genere, questo include l'origine, l'indirizzo IP di destinazione, ma non i contenuti del pacchetto. I bilanciatori di carico di livello 4 inoltrano i pacchetti di rete da e al server attraverso un'operazione di [Network Address Translation (NAT)](https://www.nginx.com/resources/glossary/layer-4-load-balancing/)/
+
+### Bilanciamento di carico al Livello 7
+
+I bilanciatori di carico di Livello 7 controllano le informazioni al [livello di applicazione](#comunicazione) per decidere come distribuire le richieste. Questo può includere contenuti della testata di pacchetto, messaggio e cookies. Un bilanciatore di carico a questo livello termina il traffico di rete, legge il messaggio, prende una decisione e poi apre una connessione con il server selezionato. Per esempio, un bilanciatore di carico di livello 7 può indirizzare traffico video a server che contengono file video, mentre può indirizzare traffico di fatturazione più sensitivo a un server a sicurezza reinforzata.
+
+Pur essendo meno flessibili, bilanciatori di Livello 4 richiedono meno tempo e risorse rispetto a quelli di Livello 7; su hardware odierno, tuttavia, l'impatto può risultare minimo.
+
+### Scalamento orizzontale
+
+I bilanciatori di carico possono anche aiutare con lo scalamento orizzontale, miglioranto prestazioni e disponibilità. Lo scalamento aggiungendo macchine è più efficiente a livello di costi e disponibilità rispetto a spostare il server su una macchina più performante, operazione chiamata **Scalamento Verticale**. È anche più facile trovare impiegati con competenze lavorative su macchine comuni rispetto che a specifici hardware enterprise.
+
+### Svantaggi: scalamento orizzontale
+
+* Scalare orizzontalmente introduce complessità e richiede clonare i server
+	* I server dovrebbero essere privi di stato: non dovrebbero contenere alcun dato collegato agli utenti come sessioni o immagini del profilo
+	* Le sessioni possono essere salvate in un sistema di memorizzazione di dati centrali come un [Database](#database) (SQL, NoSQL) o in un sistema di [cache persistente](#cache) (Redis, Memcached)
+* I server di basso livello come cache e database devono gestire più connessioni allo stesso tempo, più i server di più alto livello scalano orizzontalmente
+
+### Svantaggi: bilanciatori dic arico
+
+* Un bilanciatore di carico rischia di diventare un collo di bottiglia per le prestazioni se non ha abbastanza reisorse o non è configurato a dovere.
+* Introdurre un bilanciatore di carico per eliminare i singoli punti di vulnerabilità introduce complessità.
+* Un singolo bilanciatore di carico è un singolo punto di vulnerabilità, configurare multipli bilanciatori aumenta la complessità del sistema.
+
+### Risorse e ulteriori spunti di lettura
+
+* [NGINX architecture](https://www.nginx.com/blog/inside-nginx-how-we-designed-for-performance-scale/)
+* [HAProxy architecture guide](http://www.haproxy.org/download/1.2/doc/architecture.txt)
+* [Scalability](http://www.lecloud.net/post/7295452622/scalability-for-dummies-part-1-clones)
+* [Wikipedia](https://en.wikipedia.org/wiki/Load_balancing_(computing))
+* [Layer 4 load balancing](https://www.nginx.com/resources/glossary/layer-4-load-balancing/)
+* [Layer 7 load balancing](https://www.nginx.com/resources/glossary/layer-7-load-balancing/)
+* [ELB listener config](http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-listener-config.html)
